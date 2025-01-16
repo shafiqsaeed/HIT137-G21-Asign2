@@ -1,3 +1,28 @@
+# HIT 137 Software Now 
+
+# Assignment 2
+
+# Group: CAS/DAN 21
+# Abu Saeed Md Shafiqur Rahman (Shafiq Rahman) - S386795
+# Annafi Bin Alam (Rafin Alam) - S387086
+# Neville James Doyle (Nev Doyle) - S371207
+# Yuvraj Singh (Yuvraj Singh) - S383324
+
+# GitHub Repository: https://github.com/shafiqsaeed/HIT137-G21-Assign2
+
+# Submitted: 17 January 2025
+
+
+# Question 2 - Weather data analysis 
+# This program analyses the temperature data stored in CSV files, 
+# calculate the requested statistics, 
+# and save the results to the specified text files.
+
+
+# NOTE: Place the temperature_data folder in the working directory.
+# NOTE: Install pandas if not already installed using pip install pandas.
+
+
 import os
 import pandas as pd
 
@@ -70,27 +95,34 @@ def process_temperature_data():
         for station in largest_range_stations:
             file.write(f"{station}: {max_range:.2f}°C\n")
 
-    # Task 3: Find warmest and coolest stations
-    average_station_temps = {
-        station: (sum(temps) / len(temps)) if temps else 0.0
-        for station, temps in station_temps.items()
-    }
-    max_avg_temp = max(average_station_temps.values())
-    min_avg_temp = min(average_station_temps.values())
+    # Task 3: Find warmest and coolest stations (using actual temperature extremes)
+    warmest_stations = []
+    coolest_stations = []
+    max_temp = float('-inf')
+    min_temp = float('inf')
 
-    warmest_stations = [
-        station for station, avg_temp in average_station_temps.items() if avg_temp == max_avg_temp
-    ]
-    coolest_stations = [
-        station for station, avg_temp in average_station_temps.items() if avg_temp == min_avg_temp
-    ]
+    for station, temps in station_temps.items():
+        if temps:
+            station_max = max(temps)
+            station_min = min(temps)
+            if station_max > max_temp:
+                max_temp = station_max
+                warmest_stations = [station]
+            elif station_max == max_temp:
+                warmest_stations.append(station)
+            if station_min < min_temp:
+                min_temp = station_min
+                coolest_stations = [station]
+            elif station_min == min_temp:
+                coolest_stations.append(station)
+
     with open(WARMEST_AND_COOLEST_FILE, "w") as file:
         file.write("Warmest Station(s):\n")
         for station in warmest_stations:
-            file.write(f"{station}: {max_avg_temp:.2f}°C\n")
+            file.write(f"{station}: {max_temp:.2f}°C\n")
         file.write("\nCoolest Station(s):\n")
         for station in coolest_stations:
-            file.write(f"{station}: {min_avg_temp:.2f}°C\n")
+            file.write(f"{station}: {min_temp:.2f}°C\n")
 
     print("Analysis complete. Results written to files.")
 
