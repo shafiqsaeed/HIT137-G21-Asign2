@@ -1,4 +1,4 @@
-# HIT137-G21-Asign2
+# HIT137-G21-Assign2
 Group CAS/DAN 21 repository for assignment 2
 
 ### Contributors: 
