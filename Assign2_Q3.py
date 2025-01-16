@@ -8,71 +8,92 @@
 # Neville James Doyle (Nev Doyle) - S371207
 # Yuvraj Singh (Yuvraj Singh) - S383324
 
-# GitHub Repository: https://github.com/shafiqsaeed/HIT137-G21-Asign2
+# GitHub Repository: https://github.com/shafiqsaeed/HIT137-G21-Assign2
 
 # Submitted: 17 January 2025
+
+# Question 3 - Turtle Tree
+# This program draws a tree using recursive function of Python's Turtle graphics based on user inputs.
 
 
 import turtle
 
-def draw_branch(t, branch_length, angle_left, angle_right, depth, reduction_factor, width):
+def draw_branch(t, branch_length, angle_left, angle_right, depth, reduction_factor, thickness, is_brown):
     if depth == 0:
         return
 
-    # Set the color and width of the branch
-    if depth == 1:
-        t.color("green")  # Leaves are green
+    # Set the colour and thickness for the current branch
+    if is_brown:
+        t.color("brown")
     else:
-        t.color("brown")  # Branches are brown
-    t.width(width)
+        t.color("green")
+    t.pensize(thickness)
 
-    # Draw the main branch
+    # Draw the current branch
+    t.pendown()  # Ensure drawing is enabled
     t.forward(branch_length)
+    t.penup()  # Stop drawing after the branch to avoid overlapping
 
-    # Draw the left branch
+    # Move to draw the left branch
     t.left(angle_left)
-    draw_branch(t, branch_length * reduction_factor, angle_left, angle_right, depth - 1, reduction_factor, max(1, width - 5))
+    draw_branch(
+        t,
+        branch_length * reduction_factor,
+        angle_left,
+        angle_right,
+        depth - 1,
+        reduction_factor,
+        max(1, thickness - 3),  # Reduce thickness for next level
+        False,  # All child branches are green
+    )
+    t.right(angle_left)  # Restore heading
 
-    # Return to the original position
-    t.right(angle_left + angle_right)
-    draw_branch(t, branch_length * reduction_factor, angle_left, angle_right, depth - 1, reduction_factor, max(1, width - 5))
+    # Move to draw the right branch
+    t.right(angle_right)
+    draw_branch(
+        t,
+        branch_length * reduction_factor,
+        angle_left,
+        angle_right,
+        depth - 1,
+        reduction_factor,
+        max(1, thickness - 3),  # Reduce thickness for next level
+        False,  # All child branches are green
+    )
+    t.left(angle_right)  # Restore heading
 
-    # Return to the starting angle
-    t.left(angle_right)
+    # Return to the base of the branch
     t.backward(branch_length)
 
+# Setup the screen and turtle
 def main():
-    try:
-        # Get parameters from the user
-        angle_left = float(input("Enter the left branch angle (in degrees): "))
-        angle_right = float(input("Enter the right branch angle (in degrees): "))
-        branch_length = float(input("Enter the starting branch length: "))
-        depth = int(input("Enter the recursion depth: "))
-        reduction_factor = float(input("Enter the branch length reduction factor (e.g., 0.7): "))
+    # Get user input
+    angle_left = int(input("Enter the left branch angle (e.g., 20): "))
+    angle_right = int(input("Enter the right branch angle (e.g., 25): "))
+    starting_length = int(input("Enter the starting branch length (e.g., 100): "))
+    recursion_depth = int(input("Enter the recursion depth (e.g., 5): "))
+    reduction_factor = float(input("Enter the branch length reduction factor (e.g., 0.7): "))
+        
+    # Create the turtle environment and object
+    screen = turtle.Screen()
+    screen.setup(width=800, height=600)
+    screen.title("Turtle Tree by Group21")
+    screen.bgcolor("white")
 
-        if branch_length <= 0 or depth <= 0 or reduction_factor <= 0 or reduction_factor >= 1:
-            print("Error: Ensure all inputs are positive and the reduction factor is between 0 and 1.")
-            return
+    t = turtle.Turtle()
+    t.speed(0)
+    t.penup()
+    t.goto(0, -200)  # Start at the bottom of the screen
+    t.pendown()
+    t.setheading(90)  # Point upwards
 
-        # Set up the turtle graphics environment
-        screen = turtle.Screen()
-        screen.setup(width=800, height=600)
-        screen.title("Recursive Tree Pattern")
+    # Draw the tree
+    draw_branch(t, starting_length, angle_left, angle_right, recursion_depth, reduction_factor, 15, True)
 
-        t = turtle.Turtle()
-        t.speed(0)
-        t.left(90)  # Start facing upward
-        t.penup()
-        t.goto(0, -250)  # Move to the base of the screen
-        t.pendown()
+    t.hideturtle()
 
-        # Draw the tree with initial branch width of 30
-        draw_branch(t, branch_length, angle_left, angle_right, depth, reduction_factor, 30)
+    # Keep the window open until clicked
+    screen.exitonclick()
 
-        # Finish
-        screen.mainloop()
-
-    except ValueError:
-        print("Error: Please enter valid numeric values.")
 
 main()
