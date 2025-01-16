@@ -15,20 +15,27 @@
 
 import turtle
 
-def draw_branch(t, branch_length, angle_left, angle_right, depth, reduction_factor):
+def draw_branch(t, branch_length, angle_left, angle_right, depth, reduction_factor, width):
     if depth == 0:
         return
+
+    # Set the color and width of the branch
+    if depth == 1:
+        t.color("green")  # Leaves are green
+    else:
+        t.color("brown")  # Branches are brown
+    t.width(width)
 
     # Draw the main branch
     t.forward(branch_length)
 
     # Draw the left branch
     t.left(angle_left)
-    draw_branch(t, branch_length * reduction_factor, angle_left, angle_right, depth - 1, reduction_factor)
+    draw_branch(t, branch_length * reduction_factor, angle_left, angle_right, depth - 1, reduction_factor, max(1, width - 5))
 
     # Return to the original position
     t.right(angle_left + angle_right)
-    draw_branch(t, branch_length * reduction_factor, angle_left, angle_right, depth - 1, reduction_factor)
+    draw_branch(t, branch_length * reduction_factor, angle_left, angle_right, depth - 1, reduction_factor, max(1, width - 5))
 
     # Return to the starting angle
     t.left(angle_right)
@@ -59,8 +66,8 @@ def main():
         t.goto(0, -250)  # Move to the base of the screen
         t.pendown()
 
-        # Draw the tree
-        draw_branch(t, branch_length, angle_left, angle_right, depth, reduction_factor)
+        # Draw the tree with initial branch width of 30
+        draw_branch(t, branch_length, angle_left, angle_right, depth, reduction_factor, 30)
 
         # Finish
         screen.mainloop()
