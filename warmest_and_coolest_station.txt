@@ -1,0 +1,5 @@
+Warmest Station(s):
+MARBLE-BAR: 47.13°C
+
+Coolest Station(s):
+CABRAMURRA-SMHEA-AWS: 3.81°C
