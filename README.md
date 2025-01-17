@@ -16,7 +16,7 @@ Assign2_Q2.py (for Question 2) \
 Assign2_Q3.py (for Question 3) 
 #### Output files
 encrypted_text.txt (output for Question 1) \
-EncryptionOutput.png (console output for Question 1)
+EncryptionOutput.png (console output for Question 1)\
 average_temp.txt (output for Question 3) \
 largest_temp_range_station.txt (output for Question 3) \
 warmest_and_coolest_station (output for Question 3) \
