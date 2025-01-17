@@ -22,10 +22,21 @@
 import string
 
 
-def encrypt_text(input_file, output_file, n, m):
+def display_raw_text(input_file):
     
-    # Encrypts the content of the input file and writes to the output file.
-    # Prints the encrypted content on the console.
+    # Reads and prints the raw text from the input file to the console.
+    
+    with open(input_file, 'r') as infile:
+        raw_text = infile.read()
+    print("Raw Text:")
+    print(raw_text)
+    return raw_text
+
+
+def encrypt_text(raw_text, n, m):
+    
+    # Encrypts the given raw text using the specified n and m values.
+    # Prints the encrypted text to the console and returns it.
     
     def encrypt_char(char):
         if char in string.ascii_lowercase:  # Lowercase letters
@@ -37,25 +48,29 @@ def encrypt_text(input_file, output_file, n, m):
             if char <= 'M':
                 return chr((ord(char) - ord('A') - n) % 26 + ord('A'))
             else:
-                return chr((ord(char) - ord('A') + m**2) % 26 + ord('A'))
+                return chr((ord(char) - ord('A') + m^2) % 26 + ord('A'))
         else:  # Special characters and numbers
             return char
 
-    with open(input_file, 'r') as infile:
-        raw_text = infile.read()
-        encrypted_text = ''.join(encrypt_char(c) for c in raw_text)
-
-    with open(output_file, 'w') as outfile:
-        outfile.write(encrypted_text)
-
-    # Print encrypted text to the console
-    print("Encrypted Text:")
+    encrypted_text = ''.join(encrypt_char(c) for c in raw_text)
+    print("\nEncryption complete! Encrypted Text:")
     print(encrypted_text)
+    return encrypted_text
+
+
+def save_to_file(text, output_file):
+    
+    # Saves the given text to the specified output file.
+    
+    with open(output_file, 'w') as outfile:
+        outfile.write(text)
+    print(f"\nThe encrypted text has been saved to {output_file}")
 
 
 def decrypt_text(encrypted_text, n, m):
     
-    # Decrypts the given encrypted text and prints the result on the console.
+    # Decrypts the given encrypted text using the reverse logic of the specified n and m values.
+    # Prints the decrypted text to the console and returns it.
     
     def decrypt_char(char):
         if char in string.ascii_lowercase:  # Lowercase letters
@@ -67,22 +82,20 @@ def decrypt_text(encrypted_text, n, m):
             if char <= 'M':
                 return chr((ord(char) - ord('A') + n) % 26 + ord('A'))
             else:
-                return chr((ord(char) - ord('A') - m**2) % 26 + ord('A'))
+                return chr((ord(char) - ord('A') - m^2) % 26 + ord('A'))
         else:  # Special characters and numbers
             return char
 
     decrypted_text = ''.join(decrypt_char(c) for c in encrypted_text)
-
-    # Print decrypted text to the console
-    print("\nDecrypted Text:")
+    print("\nDecryption complete! Decrypted Text:")
     print(decrypted_text)
-
     return decrypted_text
 
 
 def check_correctness(raw_text, decrypted_text):
     
-    # Compares the raw text with the decrypted text and prints the result to the console.
+    # Compares the raw text and decrypted text to check if they match.
+    # Prints the result to the console.
     
     if raw_text == decrypted_text:
         print("\nCorrectness Check: The decrypted text matches the original.")
@@ -95,25 +108,23 @@ def main():
     raw_file = "raw_text.txt"
     encrypted_file = "encrypted_text.txt"
 
-    # Take user inputs for n and m
+    # User inputs for n and m
     n = int(input("Enter the value of n: "))
     m = int(input("Enter the value of m: "))
 
-    # Encrypt the content of raw_text.txt
-    encrypt_text(raw_file, encrypted_file, n, m)
+    # Step 1: Display raw text
+    raw_text = display_raw_text(raw_file)
 
-    # Read the encrypted text from the file
-    with open(encrypted_file, 'r') as infile:
-        encrypted_text = infile.read()
+    # Step 2: Encrypt the raw text
+    encrypted_text = encrypt_text(raw_text, n, m)
 
-    # Read the raw text from the file
-    with open(raw_file, 'r') as infile:
-        raw_text = infile.read()
+    # Step 3: Save the encrypted text to a file
+    save_to_file(encrypted_text, encrypted_file)
 
-    # Decrypt the encrypted text and print it on the console
+    # Step 4: Decrypt the encrypted text
     decrypted_text = decrypt_text(encrypted_text, n, m)
 
-    # Check correctness of the decryption and display the result
+    # Step 5: Check the correctness of the decrypted text
     check_correctness(raw_text, decrypted_text)
 
 
